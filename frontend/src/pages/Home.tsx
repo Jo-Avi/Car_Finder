@@ -17,7 +17,7 @@ const Home: React.FC = () => {
 
   const handleSearch = async () => {
     setLoading(true);
-    const res = await fetch(`http://localhost:5000/search?q=${query}`);
+    const res = await fetch(`https://car-scraping-6sl5.onrender.com/search?q=${query}`);
     const data = await res.json();
     setCars(data);
     setLoading(false);

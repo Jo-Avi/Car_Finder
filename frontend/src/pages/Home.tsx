@@ -27,37 +27,18 @@ const Home: React.FC = () => {
     setCars([]); // Clear previous results
     
     try {
-      console.log("Searching for:", query);
       const res = await fetch(`https://car-scraping-6sl5.onrender.com/search?q=${encodeURIComponent(query)}`);
-      
-      console.log("Response status:", res.status);
-      
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
-      
       const data = await res.json();
-      console.log("Response data:", data);
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      
-      // Handle both old and new response formats
-      const results = data.results || data;
-      console.log("Results array:", results);
-      console.log("Number of results:", results.length);
-      
+      // Always use data.results if available, otherwise data
+      const results = Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []);
       setCars(results);
-      
       if (results.length === 0) {
         setError("No cars found for your search. Try a different search term.");
-      } else {
-        console.log("Successfully set cars:", results.length, "cars");
       }
-      
     } catch (err) {
-      console.error("Search error:", err);
       setError(err instanceof Error ? err.message : "Failed to search for cars. Please try again.");
       setCars([]);
     } finally {
@@ -72,15 +53,12 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("Cars changed:", cars.length, "cars");
-    let result = [...cars];
-
+    let result = Array.isArray(cars) ? [...cars] : [];
     if (fuelType) {
       result = result.filter(
         (car) => car.fuel && car.fuel.toLowerCase() === fuelType.toLowerCase()
       );
     }
-
     if (priceSort) {
       result.sort((a, b) => {
         const priceA = parseFloat(a.price?.replace(/[^0-9.-]+/g, "") || "0");
@@ -88,7 +66,6 @@ const Home: React.FC = () => {
         return priceSort === "asc" ? priceA - priceB : priceB - priceA;
       });
     }
-
     if (consumptionSort) {
       result.sort((a, b) => {
         const consumptionA = parseFloat(a.consumption || "0");
@@ -98,8 +75,6 @@ const Home: React.FC = () => {
           : consumptionB - consumptionA;
       });
     }
-
-    console.log("Filtered cars:", result.length, "cars");
     setFilteredCars(result);
   }, [cars, fuelType, priceSort, consumptionSort]);
 
@@ -119,7 +94,6 @@ const Home: React.FC = () => {
             {loading ? "Searching..." : "Search"}
           </button>
         </div>
-        
         {error && (
           <div className="error-message" style={{
             color: 'red',
@@ -132,7 +106,6 @@ const Home: React.FC = () => {
             {error}
           </div>
         )}
-        
         {cars.length > 0 && (
           <div className="filters-section">
             <div className="filter-group">
@@ -175,12 +148,11 @@ const Home: React.FC = () => {
             </div>
           </div>
         )}
-        
         {loading ? (
           <Loading />
         ) : (
           <div className="grid-container">
-            {filteredCars.length > 0 ? (
+            {Array.isArray(filteredCars) && filteredCars.length > 0 ? (
               filteredCars.map((car, index) => (
                 <Card key={index} car={car} />
               ))

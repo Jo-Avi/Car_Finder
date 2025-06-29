@@ -32,8 +32,6 @@ const Home: React.FC = () => {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       const data = await res.json();
-      console.log("API response:", data);
-
       // Defensive: always set to array or empty array
       let results: any[] = [];
       if (Array.isArray(data.results)) {

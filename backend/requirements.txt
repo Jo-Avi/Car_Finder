@@ -3,3 +3,5 @@ flask-cors
 selenium
 beautifulsoup4
 gunicorn
+requests
+lxml

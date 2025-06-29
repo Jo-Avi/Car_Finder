@@ -24,15 +24,20 @@ const Home: React.FC = () => {
 
     setLoading(true);
     setError("");
+    setCars([]); // Clear previous results
     
     try {
+      console.log("Searching for:", query);
       const res = await fetch(`https://car-scraping-6sl5.onrender.com/search?q=${encodeURIComponent(query)}`);
+      
+      console.log("Response status:", res.status);
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       
       const data = await res.json();
+      console.log("Response data:", data);
       
       if (data.error) {
         throw new Error(data.error);
@@ -40,10 +45,15 @@ const Home: React.FC = () => {
       
       // Handle both old and new response formats
       const results = data.results || data;
+      console.log("Results array:", results);
+      console.log("Number of results:", results.length);
+      
       setCars(results);
       
       if (results.length === 0) {
         setError("No cars found for your search. Try a different search term.");
+      } else {
+        console.log("Successfully set cars:", results.length, "cars");
       }
       
     } catch (err) {
@@ -62,6 +72,7 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log("Cars changed:", cars.length, "cars");
     let result = [...cars];
 
     if (fuelType) {
@@ -88,6 +99,7 @@ const Home: React.FC = () => {
       });
     }
 
+    console.log("Filtered cars:", result.length, "cars");
     setFilteredCars(result);
   }, [cars, fuelType, priceSort, consumptionSort]);
 
@@ -168,9 +180,20 @@ const Home: React.FC = () => {
           <Loading />
         ) : (
           <div className="grid-container">
-            {filteredCars.map((car, index) => (
-              <Card key={index} car={car} />
-            ))}
+            {filteredCars.length > 0 ? (
+              filteredCars.map((car, index) => (
+                <Card key={index} car={car} />
+              ))
+            ) : cars.length > 0 ? (
+              <div style={{ 
+                gridColumn: '1 / -1', 
+                textAlign: 'center', 
+                padding: '2rem',
+                color: 'white'
+              }}>
+                No cars match your current filters. Try adjusting your filter settings.
+              </div>
+            ) : null}
           </div>
         )}
       </main>

@@ -48,54 +48,58 @@ def get_andrew_simms_cars(query, max_pages=3):
                 
             soup = BeautifulSoup(response.content, "html.parser")
             
-            # Look for car listings - adjust selectors based on actual site structure
-            car_elements = soup.select(".car-listing, .vehicle-item, .stock-item") or soup.select("[class*='car'], [class*='vehicle'], [class*='stock']")
+            # Use the correct selector based on the actual HTML structure
+            car_elements = soup.select(".stock-item")
             
-            if not car_elements:
-                # Fallback: look for any links that might contain car info
-                car_elements = soup.select("a[href*='/vehicle'], a[href*='/car'], a[href*='/stock']")
+            print(f"Found {len(car_elements)} stock items on page {page}")
             
             for element in car_elements:
                 try:
-                    # Extract title
-                    title_elem = element.select_one("h2, h3, .title, .name") or element
-                    title = title_elem.get_text(strip=True) if title_elem else ""
+                    # Extract title from si-title
+                    title_elem = element.select_one(".si-title")
+                    if not title_elem:
+                        continue
+                        
+                    # Build title from year, make, model, badge
+                    year_elem = title_elem.select_one(".year")
+                    make_elem = title_elem.select_one(".make")
+                    model_elem = title_elem.select_one(".model")
+                    badge_elem = title_elem.select_one(".badge")
+                    
+                    year = year_elem.get_text(strip=True) if year_elem else ""
+                    make = make_elem.get_text(strip=True) if make_elem else ""
+                    model = model_elem.get_text(strip=True) if model_elem else ""
+                    badge = badge_elem.get_text(strip=True) if badge_elem else ""
+                    
+                    title = " ".join(filter(None, [year, make, model, badge])).strip()
                     
                     # Extract link
-                    link_elem = element.find("a") if element.name != "a" else element
-                    link = link_elem.get("href", "") if link_elem else ""
+                    link = title_elem.get("href", "")
                     if link and not link.startswith("http"):
                         link = "https://www.andrewsimms.co.nz" + link
                     
-                    # Extract image
-                    img_elem = element.select_one("img")
+                    # Extract image from the first slide
+                    img_elem = element.select_one(".embla__slide img")
                     image = img_elem.get("src", "") if img_elem else ""
-                    if image and not image.startswith("http"):
-                        image = "https://www.andrewsimms.co.nz" + image
                     
                     # Extract price
-                    price_elem = element.select_one(".price, .price-value, [class*='price']")
+                    price_elem = element.select_one(".price-value")
                     price = price_elem.get_text(strip=True) if price_elem else ""
                     
-                    # Extract other details
+                    # Extract features
+                    features_elem = element.select_one(".si-features")
                     odometer = ""
                     fuel = ""
                     consumption = ""
                     
-                    # Look for odometer info
-                    odometer_elem = element.select_one(".odometer, .mileage, [class*='odo']")
-                    if odometer_elem:
-                        odometer = odometer_elem.get_text(strip=True)
-                    
-                    # Look for fuel info
-                    fuel_elem = element.select_one(".fuel, [class*='fuel']")
-                    if fuel_elem:
-                        fuel = fuel_elem.get_text(strip=True)
-                    
-                    # Look for consumption info
-                    consumption_elem = element.select_one(".consumption, [class*='consumption']")
-                    if consumption_elem:
-                        consumption = consumption_elem.get_text(strip=True)
+                    if features_elem:
+                        odometer_elem = features_elem.select_one(".odometer")
+                        fuel_elem = features_elem.select_one(".fuel")
+                        consumption_elem = features_elem.select_one(".consumption")
+                        
+                        odometer = odometer_elem.get_text(strip=True) if odometer_elem else ""
+                        fuel = fuel_elem.get_text(strip=True) if fuel_elem else ""
+                        consumption = consumption_elem.get_text(strip=True) if consumption_elem else ""
                     
                     # Only add if it matches the query and has basic info
                     if (query.strip().lower() in title.lower() and 
@@ -111,6 +115,7 @@ def get_andrew_simms_cars(query, max_pages=3):
                             "consumption": consumption,
                             "source": "Andrew Simms"
                         })
+                        print(f"Added: {title}")
                         
                 except Exception as e:
                     print(f"Error parsing car element: {e}")
@@ -138,54 +143,58 @@ def get_nzcheapcars_cars(query, max_pages=3):
                 
             soup = BeautifulSoup(response.content, "html.parser")
             
-            # Look for car listings - adjust selectors based on actual site structure
-            car_elements = soup.select(".car-listing, .vehicle-item, .stock-item") or soup.select("[class*='car'], [class*='vehicle'], [class*='stock']")
+            # Use the correct selector based on the actual HTML structure
+            car_elements = soup.select(".stock-item")
             
-            if not car_elements:
-                # Fallback: look for any links that might contain car info
-                car_elements = soup.select("a[href*='/vehicle'], a[href*='/car'], a[href*='/stock']")
+            print(f"Found {len(car_elements)} stock items on page {page}")
             
             for element in car_elements:
                 try:
-                    # Extract title
-                    title_elem = element.select_one("h2, h3, .title, .name") or element
-                    title = title_elem.get_text(strip=True) if title_elem else ""
+                    # Extract title from si-title
+                    title_elem = element.select_one(".si-title")
+                    if not title_elem:
+                        continue
+                        
+                    # Build title from year, make, model, badge
+                    year_elem = title_elem.select_one(".year")
+                    make_elem = title_elem.select_one(".make")
+                    model_elem = title_elem.select_one(".model")
+                    badge_elem = title_elem.select_one(".badge")
+                    
+                    year = year_elem.get_text(strip=True) if year_elem else ""
+                    make = make_elem.get_text(strip=True) if make_elem else ""
+                    model = model_elem.get_text(strip=True) if model_elem else ""
+                    badge = badge_elem.get_text(strip=True) if badge_elem else ""
+                    
+                    title = " ".join(filter(None, [year, make, model, badge])).strip()
                     
                     # Extract link
-                    link_elem = element.find("a") if element.name != "a" else element
-                    link = link_elem.get("href", "") if link_elem else ""
+                    link = title_elem.get("href", "")
                     if link and not link.startswith("http"):
                         link = "https://www.nzcheapcars.co.nz" + link
                     
-                    # Extract image
-                    img_elem = element.select_one("img")
+                    # Extract image from the first slide
+                    img_elem = element.select_one(".embla__slide img")
                     image = img_elem.get("src", "") if img_elem else ""
-                    if image and not image.startswith("http"):
-                        image = "https://www.nzcheapcars.co.nz" + image
                     
                     # Extract price
-                    price_elem = element.select_one(".price, .price-value, [class*='price']")
+                    price_elem = element.select_one(".price-value")
                     price = price_elem.get_text(strip=True) if price_elem else ""
                     
-                    # Extract other details
+                    # Extract features
+                    features_elem = element.select_one(".si-features")
                     odometer = ""
                     fuel = ""
                     consumption = ""
                     
-                    # Look for odometer info
-                    odometer_elem = element.select_one(".odometer, .mileage, [class*='odo']")
-                    if odometer_elem:
-                        odometer = odometer_elem.get_text(strip=True)
-                    
-                    # Look for fuel info
-                    fuel_elem = element.select_one(".fuel, [class*='fuel']")
-                    if fuel_elem:
-                        fuel = fuel_elem.get_text(strip=True)
-                    
-                    # Look for consumption info
-                    consumption_elem = element.select_one(".consumption, [class*='consumption']")
-                    if consumption_elem:
-                        consumption = consumption_elem.get_text(strip=True)
+                    if features_elem:
+                        odometer_elem = features_elem.select_one(".odometer")
+                        fuel_elem = features_elem.select_one(".fuel")
+                        consumption_elem = features_elem.select_one(".consumption")
+                        
+                        odometer = odometer_elem.get_text(strip=True) if odometer_elem else ""
+                        fuel = fuel_elem.get_text(strip=True) if fuel_elem else ""
+                        consumption = consumption_elem.get_text(strip=True) if consumption_elem else ""
                     
                     # Only add if it matches the query and has basic info
                     if (query.strip().lower() in title.lower() and 
@@ -201,6 +210,7 @@ def get_nzcheapcars_cars(query, max_pages=3):
                             "consumption": consumption,
                             "source": "NZ Cheap Cars"
                         })
+                        print(f"Added: {title}")
                         
                 except Exception as e:
                     print(f"Error parsing car element: {e}")

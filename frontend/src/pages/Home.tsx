@@ -25,15 +25,25 @@ const Home: React.FC = () => {
     setLoading(true);
     setError("");
     setCars([]); // Clear previous results
-    
+
     try {
       const res = await fetch(`https://car-scraping-6sl5.onrender.com/search?q=${encodeURIComponent(query)}`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       const data = await res.json();
-      // Always use data.results if available, otherwise data
-      const results = Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []);
+      console.log("API response:", data);
+
+      // Defensive: always set to array or empty array
+      let results: any[] = [];
+      if (Array.isArray(data.results)) {
+        results = data.results;
+      } else if (Array.isArray(data)) {
+        results = data;
+      } else {
+        // If data is not an array and not an object with results, log it
+        console.error("Unexpected API response format:", data);
+      }
       setCars(results);
       if (results.length === 0) {
         setError("No cars found for your search. Try a different search term.");
@@ -106,7 +116,7 @@ const Home: React.FC = () => {
             {error}
           </div>
         )}
-        {cars.length > 0 && (
+        {Array.isArray(cars) && cars.length > 0 && (
           <div className="filters-section">
             <div className="filter-group">
               <label htmlFor="price-sort">Sort by Price:</label>
@@ -156,7 +166,7 @@ const Home: React.FC = () => {
               filteredCars.map((car, index) => (
                 <Card key={index} car={car} />
               ))
-            ) : cars.length > 0 ? (
+            ) : Array.isArray(cars) && cars.length > 0 ? (
               <div style={{ 
                 gridColumn: '1 / -1', 
                 textAlign: 'center', 

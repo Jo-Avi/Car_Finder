@@ -9,81 +9,361 @@
 
 .car-loader {
   position: relative;
-  width: 100px;
-  height: 40px;
-  animation: drive 3s ease-in-out infinite;
+  width: 160px;
+  height: 70px;
+  animation: drive 4s ease-in-out infinite, car-bounce 0.8s ease-in-out infinite;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.4));
 }
 
 .car-body {
-  width: 100px;
-  height: 30px;
-  background-color: #bb86fc;
-  border-radius: 15px 15px 0 0;
+  width: 160px;
+  height: 45px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ff6b6b 100%);
+  border-radius: 35px 35px 15px 15px;
   position: absolute;
   bottom: 0;
+  box-shadow: 
+    inset 0 3px 6px rgba(255, 255, 255, 0.3),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.2),
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 0 0 3px #fff,
+    0 0 0 6px #ff4757;
+  animation: engine-vibration 0.15s ease-in-out infinite;
 }
 
+/* Cartoon windshield */
 .car-body::before {
   content: "";
   position: absolute;
-  top: 5px;
-  left: 15px;
-  width: 50px;
-  height: 20px;
-  background-color: #12101e;
-  border-radius: 5px;
+  top: 12px;
+  left: 30px;
+  width: 80px;
+  height: 32px;
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #74b9ff 100%);
+  border-radius: 15px;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    0 0 0 2px #fff,
+    0 0 0 4px #0984e3;
 }
 
+/* Cartoon headlights */
+.car-body .headlight {
+  position: absolute;
+  top: 18px;
+  right: 15px;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #fff 0%, #fdcb6e 50%, #e17055 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 15px #fff,
+    0 0 25px #fdcb6e,
+    0 0 35px #e17055,
+    0 0 0 2px #fff,
+    0 0 0 4px #fdcb6e;
+  animation: headlight-flicker 1.5s ease-in-out infinite;
+}
+
+/* Cartoon grille */
+.car-body .grille {
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  width: 15px;
+  height: 8px;
+  background: linear-gradient(90deg, #2d3436 0%, #636e72 50%, #2d3436 100%);
+  border-radius: 4px;
+  box-shadow: 
+    inset 0 1px 3px rgba(0, 0, 0, 0.6),
+    0 0 0 1px #fff;
+}
+
+/* Cartoon side mirrors */
+.car-body .mirror-left,
+.car-body .mirror-right {
+  position: absolute;
+  top: 10px;
+  width: 8px;
+  height: 10px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+  border-radius: 4px;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    0 0 0 2px #fff,
+    0 0 0 4px #ff4757;
+}
+
+.car-body .mirror-left {
+  left: 18px;
+  animation: mirror-wiggle 2s ease-in-out infinite;
+}
+
+.car-body .mirror-right {
+  right: 18px;
+  animation: mirror-wiggle 2s ease-in-out infinite 1s;
+}
+
+/* Cartoon door handles */
+.car-body .handle-left,
+.car-body .handle-right {
+  position: absolute;
+  top: 25px;
+  width: 10px;
+  height: 4px;
+  background: linear-gradient(90deg, #fdcb6e 0%, #ffeaa7 50%, #fdcb6e 100%);
+  border-radius: 3px;
+  box-shadow: 
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 0 1px #fff;
+}
+
+.car-body .handle-left {
+  left: 40px;
+}
+
+.car-body .handle-right {
+  right: 40px;
+}
+
+/* Cartoon taillights */
+.car-body .taillight {
+  position: absolute;
+  top: 18px;
+  left: 25px;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #ff0000 0%, #cc0000 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 12px #ff0000,
+    0 0 20px #ff0000,
+    0 0 0 2px #fff,
+    0 0 0 4px #ff0000;
+  animation: taillight-pulse 1s ease-in-out infinite;
+}
+
+/* Cartoon license plate */
+.car-body .license-plate {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 8px;
+  background: linear-gradient(90deg, #fff 0%, #f8f9fa 50%, #fff 100%);
+  border-radius: 2px;
+  border: 2px solid #2d3436;
+  font-size: 4px;
+  color: #2d3436;
+  text-align: center;
+  line-height: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Cartoon wheels */
 .car-wheel-left,
 .car-wheel-right {
-  width: 20px;
-  height: 20px;
-  background-color: #e3baff;
+  width: 32px;
+  height: 32px;
+  background: radial-gradient(circle, #2d3436 0%, #636e72 50%, #2d3436 100%);
   border-radius: 50%;
   position: absolute;
-  bottom: -10px;
+  bottom: -16px;
   animation: spin 0.8s linear infinite;
+  box-shadow: 
+    inset 0 3px 6px rgba(255, 255, 255, 0.2),
+    inset 0 -3px 6px rgba(0, 0, 0, 0.6),
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    0 0 0 3px #fff,
+    0 0 0 6px #2d3436;
+  border: 2px solid #636e72;
+}
+
+.car-wheel-left::after,
+.car-wheel-right::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: #fdcb6e;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 0 2px #fff;
+}
+
+/* Cartoon wheel spokes */
+.car-wheel-left::before,
+.car-wheel-right::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  background: conic-gradient(from 0deg, transparent 0deg, #636e72 45deg, transparent 90deg, #636e72 135deg, transparent 180deg, #636e72 225deg, transparent 270deg, #636e72 315deg, transparent 360deg);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .car-wheel-left {
-  left: 15px;
+  left: 25px;
+  animation: spin 0.8s linear infinite, wheel-bounce 0.8s ease-in-out infinite;
 }
 
 .car-wheel-right {
-  right: 15px;
+  right: 25px;
+  animation: spin 0.8s linear infinite, wheel-bounce 0.8s ease-in-out infinite 0.2s;
+}
+
+/* Cartoon exhaust particles */
+.exhaust {
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
+  width: 6px;
+  height: 6px;
+  background: radial-gradient(circle, #74b9ff 0%, #0984e3 50%, transparent 100%);
+  border-radius: 50%;
+  animation: exhaust-smoke 2s ease-out infinite;
+}
+
+.exhaust:nth-child(2) {
+  animation-delay: 0.7s;
+  left: 24px;
+  background: radial-gradient(circle, #fd79a8 0%, #e84393 50%, transparent 100%);
+}
+
+.exhaust:nth-child(3) {
+  animation-delay: 1.4s;
+  left: 28px;
+  background: radial-gradient(circle, #fdcb6e 0%, #e17055 50%, transparent 100%);
+}
+
+/* Cartoon bumpers */
+.car-body .bumper-front,
+.car-body .bumper-rear {
+  position: absolute;
+  bottom: 0;
+  width: 25px;
+  height: 10px;
+  background: linear-gradient(90deg, #2d3436 0%, #636e72 50%, #2d3436 100%);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 0 2px #fff;
+}
+
+.car-body .bumper-front {
+  right: 0;
+}
+
+.car-body .bumper-rear {
+  left: 0;
 }
 
 .road-line {
-  width: 150%;
-  height: 4px;
+  width: 200%;
+  height: 10px;
   background: repeating-linear-gradient(
     90deg,
     #fff,
-    #fff 20px,
-    transparent 20px,
-    transparent 40px
+    #fff 35px,
+    transparent 35px,
+    transparent 70px
   );
   position: relative;
-  top: 10px;
+  top: 25px;
   animation: move-road 0.8s linear infinite;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 2px #fff;
+}
+
+/* Road texture */
+.road-line::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 100%;
+  height: 18px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    transparent 100%);
+  animation: road-shimmer 3s ease-in-out infinite;
 }
 
 .loading-container p {
-  margin-top: 2rem;
-  font-size: 1.5rem;
+  margin-top: 3rem;
+  font-size: 1.8rem;
   color: #fff;
   font-weight: bold;
+  text-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.6),
+    0 0 0 2px #fff,
+    0 0 0 4px #ff6b6b;
+  animation: text-pulse 2s ease-in-out infinite;
 }
 
+/* Enhanced cartoon animations */
 @keyframes drive {
   0% {
-    transform: translateX(-200px);
+    transform: translateX(-300px) scale(0.7);
   }
   10%, 90% {
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
   }
   100% {
-    transform: translateX(200px);
+    transform: translateX(300px) scale(0.7);
+  }
+}
+
+@keyframes car-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes engine-vibration {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(1px);
+  }
+  75% {
+    transform: translateX(-1px);
+  }
+}
+
+@keyframes wheel-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes mirror-wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  75% {
+    transform: rotate(-5deg);
   }
 }
 
@@ -101,6 +381,111 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(-40px);
+    transform: translateX(-70px);
+  }
+}
+
+@keyframes headlight-flicker {
+  0%, 90%, 100% {
+    opacity: 1;
+    box-shadow: 
+      0 0 15px #fff,
+      0 0 25px #fdcb6e,
+      0 0 35px #e17055,
+      0 0 0 2px #fff,
+      0 0 0 4px #fdcb6e;
+  }
+  95% {
+    opacity: 0.6;
+    box-shadow: 
+      0 0 8px #fff,
+      0 0 15px #fdcb6e,
+      0 0 20px #e17055,
+      0 0 0 2px #fff,
+      0 0 0 4px #fdcb6e;
+  }
+}
+
+@keyframes taillight-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    box-shadow: 
+      0 0 12px #ff0000,
+      0 0 20px #ff0000,
+      0 0 0 2px #fff,
+      0 0 0 4px #ff0000;
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 
+      0 0 18px #ff0000,
+      0 0 30px #ff0000,
+      0 0 0 2px #fff,
+      0 0 0 4px #ff0000;
+  }
+}
+
+@keyframes exhaust-smoke {
+  0% {
+    opacity: 0.9;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(3);
+  }
+}
+
+@keyframes road-shimmer {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes text-pulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .car-loader {
+    width: 120px;
+    height: 55px;
+  }
+  
+  .car-body {
+    width: 120px;
+    height: 35px;
+  }
+  
+  .car-body::before {
+    width: 60px;
+    height: 25px;
+    left: 25px;
+  }
+  
+  .car-wheel-left,
+  .car-wheel-right {
+    width: 26px;
+    height: 26px;
+    bottom: -13px;
+  }
+  
+  .car-wheel-left {
+    left: 18px;
+  }
+  
+  .car-wheel-right {
+    right: 18px;
   }
 } 

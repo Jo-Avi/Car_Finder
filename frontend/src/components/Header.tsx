@@ -8,7 +8,7 @@ const Header: React.FC = () => {
         <span className="company-name">QuantAI</span>
       </div>
       <div className="header-title">
-        <h1>Car Finder NZ</h1>
+        <h1>Car Finder</h1>
         <p>Your one-stop destination to find the best cars in New Zealand</p>
       </div>
     </header>
